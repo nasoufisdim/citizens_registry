@@ -33,20 +33,19 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
-          path: '**/target/surefire-reports/*.xml'
+          path: 'citizen-registry/target/surefire-reports/*.xml'
 
-      - name: Integration Test
-        id: integration-tests
-        run: mvn failsafe:integration-test
+      - name: Run all tests (unit + integration)
+        id: all-tests
+        run: mvn verify
         working-directory: citizen-registry
 
-
       - name: Upload integration test reports
-        if: always() && steps.integration-tests.outcome == 'success'
+        if: always() && steps.all-tests.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: integration-test-reports
-          path: '**/target/failsafe-reports/*.xml'
+          path: 'citizen-registry/target/failsafe-reports/*.xml'
 
   create-release:
     needs: build-and-test
@@ -82,8 +81,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: book-spring/target/book-spring-0.1.jar
-          asset_name: book-spring-0.1.jar
+          asset_path: citizen-registry/target/citizen-registry-0.1.jar
+          asset_name: citizen-registry-0.1.jar
           asset_content_type: application/java-archive
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
