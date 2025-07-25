@@ -1,4 +1,3 @@
-
 name: Continuous Integration and Merge Workflow
 run-name: Commit ${{ github.sha }} of branch ${{ github.ref}} by @${{ github.actor }}
 
@@ -23,14 +22,11 @@ jobs:
           java-version: '21'
           distribution: 'adopt'
 
-               
-      - name: Build with Maven
-        run: mvn clean compile
+      - name: Compile, Unit Test and Install
+        id: unit-tests
+        run: mvn clean install
         working-directory: citizen-registry
 
-      - name: Run Unit and Integration Tests
-        run: mvn test
-        working-directory: citizen-registry
 
       - name: Upload test reports
         if: always() && steps.unit-tests.outcome == 'success'
@@ -42,6 +38,8 @@ jobs:
       - name: Integration Test
         id: integration-tests
         run: mvn failsafe:integration-test
+        working-directory: citizen-registry
+
 
       - name: Upload integration test reports
         if: always() && steps.integration-tests.outcome == 'success'
@@ -84,8 +82,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: citizen-spring/target/citizen-spring-0.1.jar
-          asset_name: citizen-spring-0.1.jar
+          asset_path: book-spring/target/book-spring-0.1.jar
+          asset_name: book-spring-0.1.jar
           asset_content_type: application/java-archive
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
