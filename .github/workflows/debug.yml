@@ -1,0 +1,28 @@
+name: Debug Repository Structure
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show root directory contents
+        run: ls -l
+
+      - name: Show contents of citizens_registry
+        run: ls -l citizens_registry
+
+      - name: Show contents of citizen-registry
+        run: ls -l citizens_registry/citizen-registry || echo "Folder not found"
+
+      - name: Show pom.xml and target (if exist)
+        run: |
+          ls -l citizens_registry/citizen-registry/pom.xml || echo "pom.xml not found"
+          ls -l citizens_registry/citizen-registry/target || echo "target dir not found"
