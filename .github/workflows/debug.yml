@@ -17,7 +17,7 @@ jobs:
         run: ls -l
 
       - name: Show contents of citizens_registry
-        run: ls -l citizen-registry
+        run: ls -l citizens_registry
 
       - name: Show contents of citizen-registry
         run: ls -l citizen-registry || echo "Folder not found"
