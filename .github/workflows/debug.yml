@@ -17,12 +17,12 @@ jobs:
         run: ls -l
 
       - name: Show contents of citizens_registry
-        run: ls -l citizens_registry
+        run: ls -l citizen-registry
 
       - name: Show contents of citizen-registry
-        run: ls -l citizens_registry/citizen-registry || echo "Folder not found"
+        run: ls -l citizen-registry || echo "Folder not found"
 
       - name: Show pom.xml and target (if exist)
         run: |
-          ls -l citizens_registry/citizen-registry/pom.xml || echo "pom.xml not found"
-          ls -l citizens_registry/citizen-registry/target || echo "target dir not found"
+          ls -l citizen-registry/pom.xml || echo "pom.xml not found"
+          ls -l citizen-registry/target || echo "target dir not found"
