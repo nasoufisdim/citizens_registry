@@ -1,4 +1,4 @@
-name: Continuous Integration and Merge Workflow
+name: ciwf.yml Continuous Integration and Merge Workflow
 run-name: Commit ${{ github.sha }} of branch ${{ github.ref}} by @${{ github.actor }}
 
 on:
