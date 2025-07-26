@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
-          path: 'target/surefire-reports/*.xml'
+          path: 'citizen-registry/target/surefire-reports/*.xml'
 
       - name: Run all tests (unit + integration)
         id: all-tests
@@ -45,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: integration-test-reports
-          path: 'target/failsafe-reports/*.xml'
+          path: 'citizen-registry/target/failsafe-reports/*.xml'
 
   create-release:
     needs: build-and-test
