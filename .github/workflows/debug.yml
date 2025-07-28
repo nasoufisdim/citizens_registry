@@ -10,6 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v4
+
+      - name: List root directory
+        run: ls -R .
+
+      - name: Check for pom.xml files
+        run: find . -maxdepth 3 -name pom.xml
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
