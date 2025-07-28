@@ -60,12 +60,18 @@ jobs:
         run: mvn clean package -DskipTests
         working-directory: citizen-registry
 
+      - name: Find JAR file
+        id: find_jar
+        run: |
+          JAR=$(find citizen-registry/service/target -name "*.jar" | head -n 1)
+          echo "JAR_PATH=$JAR" >> $GITHUB_ENV
+
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         with:
           tag_name: dev-${{ github.run_number }}
-          release_name: "Release from develop ${{ github.sha }}"
+          release_name: "Release #${{ github.run_number }} from develop"
           body: "Automated release from commit ${{ github.sha }}"
           draft: false
           prerelease: true
@@ -76,7 +82,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: citizen-registry/service/target/service-*.jar
+          asset_path: ${{ env.JAR_PATH }}
           asset_name: service.jar
           asset_content_type: application/java-archive
         env:
