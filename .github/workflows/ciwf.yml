@@ -64,7 +64,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: dev-pre-release
+          tag_name: dev-${{ github.run_number }}
           release_name: "Release from develop ${{ github.sha }}"
           body: "Automated release from commit ${{ github.sha }}"
           draft: false
