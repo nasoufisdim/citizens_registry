@@ -65,4 +65,3 @@ terraform destroy
 
 - Πριν τρέξετε, βεβαιωθείτε ότι έχετε ρυθμίσει σωστά τα **AWS credentials** (`~/.aws/credentials` ή environment variables).
 - Τα AMI IDs (`app_ami`, `db_ami`) πρέπει να οριστούν χειροκίνητα πριν το `apply`.
-- Μπορείτε να φτιάξετε αρχείο `terraform.tfvars` με δικές σας τιμές για πιο εύκολη διαχείριση.
