@@ -1,7 +1,7 @@
 variable "region" {
   description = "The AWS region to deploy to"
   type        = string
-  default     = "us-west-2"
+  default     = "us-east-1"
 }
 
 variable "instance_type_app" {
@@ -11,7 +11,7 @@ variable "instance_type_app" {
 }
 
 variable "instance_type_db" {
-  description = "EC2 instance type for the Book DB"
+  description = "EC2 instance type for the Citizen DB"
   type        = string
   default     = "t3.medium"
 }
@@ -31,29 +31,29 @@ variable "db_password" {
 variable "db_name" {
   description = "Name of the MySQL database"
   type        = string
-  default     = "books"
+  default     = "citizens"
 }
 
 variable "vpc_id" {
   description = "VPC ID for the infrastructure"
   type        = string
-  default     = "vpc-40767025"
+  default     = "vpc-070bb339e1faa3f45"
 }
 
-variable "subnets" {
-  description = "Subnets for the load balancer"
-  type        = list(string)
-  default     = ["subnet-d83421bd", "subnet-d1a08ea6"]
-}
+#variable "subnets" {
+ # description = "Subnets for the load balancer"
+#  type        = list(string)
+#  default     = data.aws_subnets.default.ids
+#}
 
 variable "key_name" {
   description = "The name of the SSH key pair"
   type        = string
-  default     = "cloud_test"
+  default     = "terra-test"
 }
 
 variable "jar_name" {
   description = "The name of the app jar file"
   type        = string
-  default     = "book-spring-0.1"
+  default     = "citizen-spring-0.1"
 }
