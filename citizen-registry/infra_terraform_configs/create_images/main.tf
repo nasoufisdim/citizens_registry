@@ -2,10 +2,42 @@ provider "aws" {
   region = var.region
 }
 
+# Φέρνουμε το default VPC
+data "aws_vpc" "default" {
+  default = true
+}
+
+# Security Group
+resource "aws_security_group" "ssh_sg" {
+  name        = "terraform-ssh-sg"
+  description = "Allow SSH access"
+  vpc_id      = data.aws_vpc.default.id
+
+  ingress {
+    description = "SSH from my IP"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "terraform-ssh-sg"
+  }
+}
+
 resource "aws_instance" "db" {
-  ami           = "ami-0aff18ec83b712f05" # Ubuntu Server 24.04 LTS AMI
+  ami           = "ami-0360c520857e3138f" # Ubuntu Server 24.04 LTS AMI
   instance_type = var.instance_type_db
   key_name      = var.key_name
+  vpc_security_group_ids = [aws_security_group.ssh_sg.id] 
   tags = {
     Name = "mysql-db"
   }
@@ -22,7 +54,7 @@ resource "aws_instance" "db" {
               # Restart MySQL service
               sudo systemctl restart mysql
               
-              # create non-root user and Books db that this user has full access to
+              # create non-root user and Citizens db that this user has full access to
               sudo mysql -u root -e "CREATE USER '${var.db_user}'@'%' IDENTIFIED BY '${var.db_password}';"
               sudo mysql -u root -e "CREATE DATABASE ${var.db_name};"
               sudo mysql -u root -e "GRANT ALL PRIVILEGES ON ${var.db_name}.* TO '${var.db_user}'@'%' WITH GRANT OPTION;"
@@ -44,7 +76,7 @@ resource "null_resource" "wait_for_db_instance" {
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file("C:/users/kiria/Desktop/cloud_test.pem")
+      private_key = file("C:\\Users\\nasoy\\.ssh\\terra-test.pem")
       host        = aws_instance.db.public_ip
     }
   }
@@ -56,16 +88,17 @@ resource "aws_ami_from_instance" "db_ami" {
   source_instance_id = aws_instance.db.id
  
   tags = {
-    Name = "books-db-ami"
+    Name = "citizens-db-ami"
   }
 
   depends_on = [null_resource.wait_for_db_instance]
 }
 
 resource "aws_instance" "app" {
-  ami           = "ami-0aff18ec83b712f05"  # Ubuntu Server 24.04 LTS AMI
+  ami           = "ami-0360c520857e3138f"  # Ubuntu Server 24.04 LTS AMI
   instance_type = var.instance_type_app
   key_name      = var.key_name
+  vpc_security_group_ids = [aws_security_group.ssh_sg.id] 
   tags = {
     Name = "spring-boot-setup"
   }
@@ -96,7 +129,7 @@ resource "null_resource" "wait_for_app_instance" {
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file("C:/users/kiria/Desktop/cloud_test.pem")
+      private_key = file("C:\\Users\\nasoy\\.ssh\\terra-test.pem")
       host        = aws_instance.app.public_ip
     }
   }
@@ -107,7 +140,7 @@ resource "aws_ami_from_instance" "app_ami" {
   source_instance_id = aws_instance.app.id
   
   tags = {
-    Name = "book-app-ami"
+    Name = "citizen-app-ami"
   }
   
   depends_on = [null_resource.wait_for_app_instance]

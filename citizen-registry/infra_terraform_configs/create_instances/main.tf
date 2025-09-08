@@ -2,6 +2,14 @@ provider "aws" {
   region = var.region
 }
 
+# Φέρνουμε όλα τα subnets του VPC
+data "aws_subnets" "default" {
+  filter {
+    name   = "vpc-id"
+    values = [var.vpc_id]
+  }
+}
+
 data "terraform_remote_state" "images" {
   backend = "local"
 
@@ -16,7 +24,7 @@ resource "aws_instance" "db" {
   key_name      = var.key_name
   vpc_security_group_ids = [aws_security_group.db_sg.id]
   tags = {
-    Name = "Book DB"
+    Name = "Citizen DB"
   }
 
 }
@@ -49,7 +57,7 @@ resource "aws_lb" "app_lb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.lb_sg.id]
-  subnets            = var.subnets
+  subnets            = data.aws_subnets.default.ids
 }
 
 resource "aws_lb_target_group" "app_tg" {
@@ -59,7 +67,7 @@ resource "aws_lb_target_group" "app_tg" {
   vpc_id      = var.vpc_id
   target_type = "instance"
   health_check {
-    path                = "/api/books"
+    path                = "/api/citizens"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 5
