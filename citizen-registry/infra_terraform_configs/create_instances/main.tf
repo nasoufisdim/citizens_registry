@@ -49,7 +49,7 @@ resource "aws_instance" "app" {
               echo "User data script executed at $(date)" >> /var/log/user-data.log
               EOF
 
-  count = 2
+  count = 3
 }
 
 resource "aws_lb" "app_lb" {
@@ -93,7 +93,7 @@ resource "aws_lb_target_group_attachment" "app_tg_attachment" {
   target_id        = aws_instance.app[count.index].id
   port             = 8080
 
-  count = 2
+  count = 3
 }
 
 resource "aws_security_group" "lb_sg" {
