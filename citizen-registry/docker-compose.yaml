@@ -1,13 +1,13 @@
 services:
-  book:
-    image: "book:0.1"
+  citizen:
+    image: "citizen:0.1"
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "80:8080"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/api/books"]
+      test: ["CMD", "curl", "-f", "http://localhost/api/citizens"]
       interval: 1m30s
       timeout: 10s
       retries: 3
@@ -16,9 +16,8 @@ services:
     environment:
       DB_HOST: ${DB_HOST}
       DB_NAME: ${DB_NAME}
-    secrets:
-       - spring.datasource.username
-       - spring.datasource.password
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
     networks:
       - library-net
     depends_on: 
@@ -34,23 +33,18 @@ services:
       retries: 10
     restart: on-failure
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: ${MYSQL_RANDOM_ROOT_PASSWORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_USER_FILE: /run/secrets/spring.datasource.username
       MYSQL_PASSWORD_FILE: /run/secrets/spring.datasource.password
       MYSQL_DATABASE: ${DB_NAME}
-    secrets:
-       - spring.datasource.username
-       - spring.datasource.password
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+
     volumes:
       - mysql:/var/lib/mysql
     networks:
-      - library-net
+      - citizen-net
 networks:
-  library-net: {}
+  citizen-net: {}
 volumes:
   mysql: {}
-secrets:
-   spring.datasource.username:
-     file: ./db_user.txt
-   spring.datasource.password:
-     file: ./db_pwd.txt
