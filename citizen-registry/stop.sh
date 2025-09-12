@@ -1,4 +1,4 @@
-docker container stop mysql book
-docker container rm mysql book
-docker network rm book-net
+docker container stop mysql citizen
+docker container rm mysql citizen
+docker network rm citizen-net
 docker system prune -f
